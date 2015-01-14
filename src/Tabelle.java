@@ -3,12 +3,10 @@ package rueckwaertssalto;
 import java.util.*;
 
 /**
- * 
  * @author Nenad Gligorevic
  * @author Melanie Goebel
  * @version 20140114
- * 
- * 
+ * Speichert und verwaltet Informationen einer Tabelle
  */
 public class Tabelle {
 	private ArrayList<String> attribute;
@@ -16,23 +14,41 @@ public class Tabelle {
 	private ArrayList<String> foreignkey;
 	private String name;
 	
+	/**
+	 * Gibt der Tabelle einen Namen und initalisiert die Listen
+	 * @param name
+	 */
 	public Tabelle(String name) {
 		this.name = name;
 		this.attribute = new ArrayList<String>();
 		this.primarykey = new ArrayList<String>();
 		this.foreignkey = new ArrayList<String>();
 	}
-	
+	/**
+	 * Gibt den Namen der Tabelle als Text zurueck
+	 * @return den Namen
+	 */
 	public String getName() {
 		return this.name;
 	}
-	
-	public void addAttributekey(String attribute) {
-		this.attribute.add(attribute);
+	/**
+	 * Hinzufuegen eines Attributs
+	 * @param attribut den Namen des Attributs
+	 */
+	public void addAttribut(String attribut) {
+		this.attribute.add(attribut);
 	}
+	/**
+	 * Hinzufuegen eines PrimaryKeys
+	 * @param key den Namen des Primarykeys
+	 */
 	public void addPrimarykey(String key) {
 		this.primarykey.add(key);
 	}
+	/**
+	 * Hinzufuegen eines Foreignkeys
+	 * @param key den Namen des Foreignkeys
+	 */
 	public void addForeignkey(String key) {
 		this.foreignkey.add(key);
 	}

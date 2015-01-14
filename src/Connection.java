@@ -18,6 +18,7 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
  * 
  */
 public class Connection {
+	private String database;
 	private java.sql.Connection con;
 	private MysqlDataSource ds;
 	
@@ -58,23 +59,54 @@ public class Connection {
 	 * @param database die Datenbank
 	 * @return Tabellen der Datenbank
 	 * 
-	 * Tabellen werden in ArrayList gespeichert 
-	 * und ausgelesen. 
+	 * Tabellen werden in ArrayList ausgelesen und gespeichert 
 	 */
-	public ArrayList<String> getTables(String database){
+	public ArrayList<Tabelle> getTables(String database){
+		this.database = database;
 		Statement st;
-		ArrayList<String> tables = new ArrayList<String>();
+		ArrayList<Tabelle> tables = new ArrayList<Tabelle>();
 		try {
 			st = con.createStatement();
 			ResultSet rs1 = st.executeQuery("use "+database+";");
 			ResultSet rs = st.executeQuery("show tables;");
 			while(rs.next()){
-				tables.add(rs.getString(1));
+				tables.add(new Tabelle(rs.getString(1)));
 			}
 		} catch (SQLException e) {
 			System.err.println("Failed to send command. Is "+database+" really a database?");
 		}
 		return tables;
 	}
+	/**
+	 * @param tabellen die Tabellen der DB
+	 * 
+	 * Informationen wie Attribute und Keys werden zu den Tabellen gespeichert
+	 */
+	public void getInfo(Tabelle t){
+		if(database != null){
+		Statement st;
+		try{
+			st = con.createStatement();
+			ResultSet rs1 = st.executeQuery("use "+database+";");
+			ResultSet rs = st.executeQuery("desc "+t.getName()+";");
+			while(rs.next()){
+				t.addAttribut(rs.getString(1));
+				if(rs.getString(4).equals("PRI"))
+					t.addPrimarykey(rs.getString(1));
+				if(rs.getString(4).equals("MUL"))
+					t.addForeignkey(rs.getString(1));
+				
+			}
+		}catch (SQLException e){
+			System.err.println("Failed to send command. Is "+database+" really a database?");
+		}
+		}else{
+			System.err.println("Please set the Database!");
+		}
+	}
+	public void setDatabase(String database){
+		this.database = database;
+	}
+	
 	
 }
