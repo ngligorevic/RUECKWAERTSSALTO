@@ -11,7 +11,7 @@ import java.util.*;
 public class Tabelle {
 	private ArrayList<String> attribute;
 	private ArrayList<String> primarykey;
-	private ArrayList<String> foreignkey;
+	private ArrayList<ForeignKey> foreignkey;
 	private String name;
 	
 	/**
@@ -22,7 +22,7 @@ public class Tabelle {
 		this.name = name;
 		this.attribute = new ArrayList<String>();
 		this.primarykey = new ArrayList<String>();
-		this.foreignkey = new ArrayList<String>();
+		this.foreignkey = new ArrayList<ForeignKey>();
 	}
 	/**
 	 * Gibt den Namen der Tabelle als Text zurueck
@@ -49,8 +49,8 @@ public class Tabelle {
 	 * Hinzufuegen eines Foreignkeys
 	 * @param key den Namen des Foreignkeys
 	 */
-	public void addForeignkey(String key) {
-		this.foreignkey.add(key);
+	public void addForeignkey(String key, String table) {
+		this.foreignkey.add(new ForeignKey(key,table));
 	}
 	/**
 	 * Gibt die Liste der Attribute zurueck
@@ -70,7 +70,7 @@ public class Tabelle {
 	 * Gibt die Liste der ForeignKeys zurueck
 	 * @return die ForeignKeys in einemn ArrayList
 	 */
-	public ArrayList<String> getForeignkeys(){
+	public ArrayList<ForeignKey> getForeignkeys(){
 		return foreignkey;
 	}
 

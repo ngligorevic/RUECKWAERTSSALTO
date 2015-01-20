@@ -98,7 +98,7 @@ public class Connection {
 					t.addPrimarykey(rs.getString(1));		
 			}
 			while(rsK.next()){
-				t.addForeignkey(rsK.getString("FKCOLUMN_NAME"));
+				t.addForeignkey(rsK.getString("FKCOLUMN_NAME"),rsK.getString("PKTABLE_NAME"));
 			}
 		}catch (SQLException e){
 			System.err.println("Failed to send command. Is "+database+" really a database?");

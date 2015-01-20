@@ -12,7 +12,7 @@ public class Diagram{
 		String ausg = "";
 		ArrayList<String> atr;
 		ArrayList<String> pk;
-		ArrayList<String> fk;
+		ArrayList<ForeignKey> fk;
 		ArrayList<Tabelle> tabellen = con.getTables(database);
 		for(int i = 0; i < tabellen.size(); i++){
 			ausg += tabellen.get(i).getName()+"(";
@@ -21,14 +21,24 @@ public class Diagram{
 			pk = tabellen.get(i).getPrimarykeys();
 			fk = tabellen.get(i).getForeignkeys();
 			for(int j = 0; j < atr.size(); j++){
-				if(fk.contains(atr.get(j)))
-					ausg += "<FK>";
 				if(pk.contains(atr.get(j)))
 					ausg += "<PK>";
-				ausg += atr.get(j)+" , ";
+				String table = getFKTable(fk,atr.get(j));
+				if(table != null)
+					ausg += "<FK>"+table+".";
+				ausg += atr.get(j);
+				if(j < atr.size()-1)
+					ausg += ", ";
 			}
 			ausg += ")\n";
 		}
 		return ausg;
+	}
+	private String getFKTable(ArrayList<ForeignKey> fk, String key){
+		for(int i=0; i < fk.size(); i++){
+			if(fk.get(i).equals(key))
+				return fk.get(i).getForeigntable();
+		}
+		return null;
 	}
 }
