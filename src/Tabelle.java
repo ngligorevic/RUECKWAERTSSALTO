@@ -52,5 +52,26 @@ public class Tabelle {
 	public void addForeignkey(String key) {
 		this.foreignkey.add(key);
 	}
+	/**
+	 * Gibt die Liste der Attribute zurueck
+	 * @return die Attribute in einemn ArrayList
+	 */
+	public ArrayList<String> getAttributs(){
+		return attribute;
+	}
+	/**
+	 * Gibt die Liste der PrimayKeys zurueck
+	 * @return die PrimaryKeys in einemn ArrayList
+	 */
+	public ArrayList<String> getPrimarykeys(){
+		return primarykey;
+	}
+	/**
+	 * Gibt die Liste der ForeignKeys zurueck
+	 * @return die ForeignKeys in einemn ArrayList
+	 */
+	public ArrayList<String> getForeignkeys(){
+		return foreignkey;
+	}
 
 }
