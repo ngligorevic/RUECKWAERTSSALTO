@@ -91,14 +91,14 @@ public class Connection {
 			ResultSet rs1 = st.executeQuery("use "+database+";");
 			ResultSet rs = st.executeQuery("desc "+t.getName()+";");
 			DatabaseMetaData meta = con.getMetaData();
-			ResultSet rsK = meta.getExportedKeys(database, null, t.getName());
+			ResultSet rsK = meta.getImportedKeys(database, null, t.getName());
 			while(rs.next()){
 				t.addAttribut(rs.getString(1));
 				if(rs.getString(4).equals("PRI"))
 					t.addPrimarykey(rs.getString(1));		
 			}
 			while(rsK.next()){
-				t.addForeignkey(rsK.getString("FKTABLE_NAME")+rsK.getString("FKCOLUMN_NAME"));
+				t.addForeignkey(rsK.getString("FKCOLUMN_NAME"));
 			}
 		}catch (SQLException e){
 			System.err.println("Failed to send command. Is "+database+" really a database?");
