@@ -47,6 +47,9 @@ public class Start {
 		if(d.getRM(con, arguments.get("d").toString(),arguments.get("o").toString())==true){
 			System.out.println("RM saved in "+arguments.get("o").toString());
 		}
+		if(d.getERD(con, arguments.get("d").toString(),"ERD.dot")==true){
+			System.out.println("ERD saved in ERD.dot");
+		}
 		
 	}
 }
