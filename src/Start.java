@@ -13,7 +13,11 @@ public class Start {
 		ArgumentParser parser = new ArgumentParserImpl("Connect to RDBMS:",false)
 		.defaultHelp(true)    
 		.description("Checks arguments for connecting to a RDBMS");
-		
+
+		parser.addArgument("-c")
+		.choices("ERD","RM")
+		.setDefault("ERD")
+		.help("Choice between ERD or RM");
 		parser.addArgument("-h")
 		.setDefault("localhost")
 		.help("hostname");
@@ -27,11 +31,11 @@ public class Start {
 		.help("datenbank");
 		parser.addArgument("-o").required(true)
 		.help("Output file");
-		
+
 		parser.addArgument("--help")
 		.action(Arguments.help())//Hilfetext der Argumenten
 		.setDefault(Arguments.SUPPRESS);
-		
+
 		Map<String,Object> arguments = null;
 		try {
 			Namespace res = parser.parseArgs(args);
@@ -40,16 +44,24 @@ public class Start {
 			parser.handleError(e);
 			System.exit(1);
 		}
-		
+
 		Connection con = new Connection();
 		con.connect(arguments.get("h").toString(), arguments.get("u").toString(), arguments.get("p").toString());
 		Diagram d = new Diagram();
-		if(d.getRM(con, arguments.get("d").toString(),arguments.get("o").toString())==true){
-			System.out.println("RM saved in "+arguments.get("o").toString());
+		if(arguments.get("c").toString().equals("RM")){
+			if(d.getRM(con, arguments.get("d").toString(),arguments.get("o").toString())==true){
+				System.out.println("RM saved in "+arguments.get("o").toString());
+			}
+		}else{
+			if(d.getDotFile(con, arguments.get("d").toString(),"ERD.dot")==true){
+				System.out.println("Dotfile saved in ERD.dot");
+				if(d.Drawpng("ERD.dot", arguments.get("o").toString())){
+					System.out.println("ERD saved in "+arguments.get("o").toString());
+				}
+			}else{
+				System.err.println("Something went wrong while generate ERD.dot");
+			}
 		}
-		if(d.getERD(con, arguments.get("d").toString(),"ERD.dot")==true){
-			System.out.println("ERD saved in ERD.dot");
-		}
-		
+
 	}
 }

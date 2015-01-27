@@ -62,7 +62,7 @@ public class Diagram{
 		}
 		return null;
 	}
-	public boolean getERD(Connection con, String database, String filename){
+	public boolean getDotFile(Connection con, String database, String filename){
 		File file;
 		FileWriter rf;
 		BufferedWriter bf;
@@ -86,16 +86,16 @@ public class Diagram{
 				fk = tabellen.get(i).getForeignkeys();
 				// raumrnr_PRI[shape=ellipse,style=filled,color=red,label="rnr"];
 				for(int j = 0; j < atr.size(); j++){
-					bf.write(atr.get(j)+"[shape=ellipse,style=filled,");
+					bf.write(tabellen.get(i).getName()+atr.get(j)+"[shape=ellipse,style=filled,");
 					if(pk.contains(atr.get(j)))
 						bf.write("color=red,");
 					String table = getFKTable(fk,atr.get(j));
 					bf.write("label =\""+atr.get(j)+"\"];");
 					bf.newLine();
-					bf.write(tabellen.get(i).getName()+"->"+atr.get(j));
+					bf.write(tabellen.get(i).getName()+"->"+tabellen.get(i).getName()+atr.get(j));
 					bf.newLine();
 					if(table != null){
-						ftable = table+"->"+tabellen.get(i).getName();
+						ftable = table+tabellen.get(i).getName()+"[shape=diamond,label=\"\"];"+table+"->"+table+tabellen.get(i).getName()+"->"+tabellen.get(i).getName();
 					}
 					//bf.write("<FK>"+table+".");
 					
@@ -121,5 +121,18 @@ public class Diagram{
 			return false;
 		}
 		return true;
+	}
+	public boolean Drawpng(String dotfile, String file){
+		Process proc;
+		try {
+			proc = Runtime.getRuntime().exec("neato -Tpng "+dotfile+" -o "+file);
+			return true;
+
+		} catch (IOException e) {
+			System.err.println("Something went wront while generate "+file);
+			return false;
+		}
+
+
 	}
 }
