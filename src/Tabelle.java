@@ -9,7 +9,7 @@ import java.util.*;
  * Speichert und verwaltet Informationen einer Tabelle
  */
 public class Tabelle {
-	private ArrayList<String> attribute;
+	private ArrayList<Attribut> attribute;
 	private ArrayList<String> primarykey;
 	private ArrayList<ForeignKey> foreignkey;
 	private String name;
@@ -20,7 +20,7 @@ public class Tabelle {
 	 */
 	public Tabelle(String name) {
 		this.name = name;
-		this.attribute = new ArrayList<String>();
+		this.attribute = new ArrayList<Attribut>();
 		this.primarykey = new ArrayList<String>();
 		this.foreignkey = new ArrayList<ForeignKey>();
 	}
@@ -35,8 +35,8 @@ public class Tabelle {
 	 * Hinzufuegen eines Attributs
 	 * @param attribut den Namen des Attributs
 	 */
-	public void addAttribut(String attribut) {
-		this.attribute.add(attribut);
+	public void addAttribut(String name) {
+		this.attribute.add(new CommonAttribut(name));
 	}
 	/**
 	 * Hinzufuegen eines PrimaryKeys
@@ -56,7 +56,7 @@ public class Tabelle {
 	 * Gibt die Liste der Attribute zurueck
 	 * @return die Attribute in einemn ArrayList
 	 */
-	public ArrayList<String> getAttributs(){
+	public ArrayList<Attribut> getAttributs(){
 		return attribute;
 	}
 	/**

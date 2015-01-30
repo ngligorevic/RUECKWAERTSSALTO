@@ -21,7 +21,7 @@ public class Diagram{
 			file = new File(filename);
 			rf = new FileWriter(file);
 			bf = new BufferedWriter(rf); 
-			ArrayList<String> atr;
+			ArrayList<Attribut> atr;
 			ArrayList<String> pk;
 			ArrayList<ForeignKey> fk;
 			ArrayList<Tabelle> tabellen = con.getTables(database);
@@ -32,12 +32,12 @@ public class Diagram{
 				pk = tabellen.get(i).getPrimarykeys();
 				fk = tabellen.get(i).getForeignkeys();
 				for(int j = 0; j < atr.size(); j++){
-					if(pk.contains(atr.get(j)))
+					if(pk.contains(atr.get(j).getName()))
 						bf.write("<PK>");
-					String table = getFKTable(fk,atr.get(j));
+					String table = getFKTable(fk,atr.get(j).getName());
 					if(table != null)
 						bf.write("<FK>"+table+".");
-					bf.write( atr.get(j));
+					bf.write( atr.get(j).getName());
 					if(j < atr.size()-1)
 						bf.write(", ");
 				}
@@ -71,7 +71,7 @@ public class Diagram{
 			rf = new FileWriter(file);
 			bf = new BufferedWriter(rf); 
 			String ftable = "";
-			ArrayList<String> atr;
+			ArrayList<Attribut> atr;
 			ArrayList<String> pk;
 			ArrayList<ForeignKey> fk;
 			ArrayList<Tabelle> tabellen = con.getTables(database);
@@ -86,13 +86,13 @@ public class Diagram{
 				fk = tabellen.get(i).getForeignkeys();
 				// raumrnr_PRI[shape=ellipse,style=filled,color=red,label="rnr"];
 				for(int j = 0; j < atr.size(); j++){
-					bf.write(tabellen.get(i).getName()+atr.get(j)+"[shape=ellipse,style=filled,");
-					if(pk.contains(atr.get(j)))
+					bf.write(tabellen.get(i).getName()+atr.get(j).getName()+"[shape=ellipse,style=filled,");
+					if(pk.contains(atr.get(j).getName()))
 						bf.write("color=red,");
-					String table = getFKTable(fk,atr.get(j));
-					bf.write("label =\""+atr.get(j)+"\"];");
+					String table = getFKTable(fk,atr.get(j).getName());
+					bf.write("label =\""+atr.get(j).getName()+"\"];");
 					bf.newLine();
-					bf.write(tabellen.get(i).getName()+"->"+tabellen.get(i).getName()+atr.get(j));
+					bf.write(tabellen.get(i).getName()+"->"+tabellen.get(i).getName()+atr.get(j).getName());
 					bf.newLine();
 					if(table != null){
 						ftable = table+tabellen.get(i).getName()+"[shape=diamond,label=\"\"];"+table+"->"+table+tabellen.get(i).getName()+"->"+tabellen.get(i).getName();
