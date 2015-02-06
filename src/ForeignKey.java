@@ -1,17 +1,33 @@
 package rueckwaertssalto;
 
-public class ForeignKey{
-	private String name;
+public class ForeignKey extends Decorator{
+	private String nameThisTable;
 	private String foreigntable;
-	public ForeignKey(String name, String table){
-		this.name = name;
-		this.foreigntable = table;
+	private String nameForeignTable;
+	private Attribut a;
+
+	public ForeignKey(Attribut a, String foreigntable, String nameForeignTable) {
+		super(a);
+		this.a = a;
+		this.foreigntable = foreigntable;
+		this.nameForeignTable = nameForeignTable;
 	}
+	@Override
+	public String getRMText() {
+		return foreigntable+"."+nameForeignTable+":"+a.getRMText();
+	}
+	  
+
+//	public ForeignKey(String name, String table, String nameForeignTable){
+//		this.nameThisTable = name;
+//		this.foreigntable = table;
+//		this.nameForeignTable = nameForeignTable;
+//	}
 	/**
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
+		return nameThisTable;
 	}
 	/**
 	 * @return the foreigntable
@@ -23,7 +39,7 @@ public class ForeignKey{
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		this.name = name;
+		this.nameThisTable = name;
 	}
 	/**
 	 * @param foreigntable the foreigntable to set
@@ -31,17 +47,7 @@ public class ForeignKey{
 	public void setForeigntable(String foreigntable) {
 		this.foreigntable = foreigntable;
 	}
-	@Override
-	public boolean equals(Object o) {
-		if(this.name.equals(o))
-			return true;
-		else
-			return false;
-	}
-	@Override
-	public String toString(){
-		return foreigntable+"."+name;
-	}
+
 
 }
 

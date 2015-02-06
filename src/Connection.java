@@ -78,6 +78,23 @@ public class Connection {
 		}
 		return tables;
 	}
+	public ForeignKey makeForeignKey(String table, String column, Attribut a){
+		try{
+		Statement st1 = con.createStatement();
+		ResultSet rs1 = st1.executeQuery("select "
+        +"referenced_table_name, referenced_column_name "
+        +"from information_schema.key_column_usage "
+        +"where referenced_table_name is not null "
+        + "and table_schema = '"+database+"' and table_name = '"+table+"' and column_name = '"+column+"';");
+		rs1.next();
+		return new ForeignKey(a, rs1.getString("referenced_table_name"), rs1.getString("referenced_column_name"));
+	
+		}catch (SQLException e){
+//			System.err.println("Failed to get Information of ForeignKey"+column+table);
+			e.printStackTrace();
+			return null;
+		}
+	}
 	/**
 	 * @param tabellen die Tabellen der DB
 	 * 
@@ -92,14 +109,18 @@ public class Connection {
 			ResultSet rs = st.executeQuery("desc "+t.getName()+";");
 			DatabaseMetaData meta = con.getMetaData();
 			ResultSet rsK = meta.getImportedKeys(database, null, t.getName());
+			Attribut a = null;
 			while(rs.next()){
-				t.addAttribut(rs.getString(1));
+				a = new CommonAttribut(rs.getString(1));
 				if(rs.getString(4).equals("PRI"))
-					t.addPrimarykey(rs.getString(1));		
+					a = new PrimaryKey(a);
+				if(rs.getString(4).equals("MUL")){
+					a = makeForeignKey(t.getName(),rs.getString(1),a);
+				}
+				t.addAttribut(a);
 			}
-			while(rsK.next()){
-				t.addForeignkey(rsK.getString("FKCOLUMN_NAME"),rsK.getString("PKTABLE_NAME"));
-			}
+			
+			
 		}catch (SQLException e){
 			System.err.println("Failed to send command. Is "+database+" really a database?");
 		}
