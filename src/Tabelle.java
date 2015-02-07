@@ -54,7 +54,6 @@ public class Tabelle {
 	}
 	public Attribut getAttributWithName(String name){
 		for(int i = 0; i < attribute.size(); i++){
-			System.out.println(name + attribute.get(i).getName());
 			if(attribute.get(i).getName().equals(name))
 				return attribute.get(i);
 		}
@@ -62,7 +61,6 @@ public class Tabelle {
 	}
 	public void setAttributWidthName(Attribut a){
 		for(int i = 0; i < attribute.size(); i++){
-			System.out.println(name + attribute.get(i).getName());
 			if(attribute.get(i).getName().equals(a.getName()))
 				attribute.set(i, a);
 		}

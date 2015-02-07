@@ -18,6 +18,12 @@ public class PrimaryKey extends Decorator{
 	public String getRMText(){
 		return a.getRMText()+"<PK>";
 	}
+
+	@Override
+	public String getERDText() {
+		String[] erd = a.getERDText().split(";");
+		return erd[0]+";"+erd[1]+"[color=red];";
+	}
 	
 	
 }

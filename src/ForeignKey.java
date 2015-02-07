@@ -48,6 +48,14 @@ public class ForeignKey extends Decorator{
 	public void setForeigntable(String foreigntable) {
 		this.foreigntable = foreigntable;
 	}
+	@Override
+	public String getERDText() {
+//		return a.getERDText()+" "
+//	+a.getTable()+foreigntable+"[shape=diamond,label=\"\"];"
+//				+a.getTable()+"->"+a.getTable()+foreigntable+"->"+foreigntable+"[arrowhead=none];";
+		String[] erd = a.getERDText().split(";");
+		return erd[0]+";"+erd[1]+"[label=\""+a.getName()+"_MUL\"];";
+	}
 
 
 }

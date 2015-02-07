@@ -96,9 +96,9 @@ public class Connection {
 			Attribut b = null;
 			while(rs.next()){
 				if(rs.getString("Key").equals(""))
-					t.addAttribut(new CommonAttribut(rs.getString(1)));
+					t.addAttribut(new CommonAttribut(rs.getString(1), t.getName()));
 				else if(rs.getString("Key").equals("PRI"))
-					t.addAttribut(new PrimaryKey(new CommonAttribut(rs.getString(1))));
+					t.addAttribut(new PrimaryKey(new CommonAttribut(rs.getString(1), t.getName())));
 				
 				
 			}
@@ -108,7 +108,7 @@ public class Connection {
 				if( a != null)
 					t.setAttributWidthName(new ForeignKey(a, rsK.getString(3), rsK.getString(4)));
 				else
-					t.addAttribut(new ForeignKey(new CommonAttribut(rsK.getString(8)),  rsK.getString(3), rsK.getString(4)));
+					t.addAttribut(new ForeignKey(new CommonAttribut(rsK.getString(8), t.getName()),  rsK.getString(3), rsK.getString(4)));
 			}
 
 		}catch (SQLException e){
