@@ -47,18 +47,12 @@ public class Start {
 		}
 
 		Connection con = new Connection();
-		con.connect(arguments.get("h").toString(), arguments.get("u").toString(), arguments.get("p").toString());
+		con.connect(arguments.get("h").toString(), arguments.get("u").toString(), arguments.get("p").toString(),arguments.get("d").toString());
 		Diagram d = new Diagram();
 		if(arguments.get("c").toString().equals("RM")){
-			ArrayList<Tabelle> tabellen = con.getTables(arguments.get("d").toString());
-			
-			for(int i = 0; i < tabellen.size(); i++){
-				con.getInfo(tabellen.get(i));
-				System.out.println(tabellen.get(i).getRM());
+			if(d.getRM(con, arguments.get("d").toString(),arguments.get("o").toString())==true){
+				System.out.println("RM saved in "+arguments.get("o").toString());
 			}
-//			if(d.getRM(con, arguments.get("d").toString(),arguments.get("o").toString())==true){
-//				System.out.println("RM saved in "+arguments.get("o").toString());
-//			}
 		}else{
 //			if(d.getDotFile(con, arguments.get("d").toString(),"ERD.dot")==true){
 //				System.out.println("Dotfile saved in ERD.dot");

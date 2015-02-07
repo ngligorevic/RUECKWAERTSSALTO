@@ -1,7 +1,7 @@
 package rueckwaertssalto;
 
 public class ForeignKey extends Decorator{
-	private String nameThisTable;
+	private String name;
 	private String foreigntable;
 	private String nameForeignTable;
 	private Attribut a;
@@ -11,6 +11,7 @@ public class ForeignKey extends Decorator{
 		this.a = a;
 		this.foreigntable = foreigntable;
 		this.nameForeignTable = nameForeignTable;
+		this.name = a.getName();
 	}
 	@Override
 	public String getRMText() {
@@ -27,7 +28,7 @@ public class ForeignKey extends Decorator{
 	 * @return the name
 	 */
 	public String getName() {
-		return nameThisTable;
+		return name;
 	}
 	/**
 	 * @return the foreigntable
@@ -39,7 +40,7 @@ public class ForeignKey extends Decorator{
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		this.nameThisTable = name;
+		this.name = name;
 	}
 	/**
 	 * @param foreigntable the foreigntable to set

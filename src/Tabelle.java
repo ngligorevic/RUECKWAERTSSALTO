@@ -52,4 +52,19 @@ public class Tabelle {
 		rm += " )";
 		return rm;
 	}
+	public Attribut getAttributWithName(String name){
+		for(int i = 0; i < attribute.size(); i++){
+			System.out.println(name + attribute.get(i).getName());
+			if(attribute.get(i).getName().equals(name))
+				return attribute.get(i);
+		}
+		return null;
+	}
+	public void setAttributWidthName(Attribut a){
+		for(int i = 0; i < attribute.size(); i++){
+			System.out.println(name + attribute.get(i).getName());
+			if(attribute.get(i).getName().equals(a.getName()))
+				attribute.set(i, a);
+		}
+	}
 }
