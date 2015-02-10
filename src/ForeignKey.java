@@ -50,11 +50,11 @@ public class ForeignKey extends Decorator{
 	}
 	@Override
 	public String getERDText() {
-//		return a.getERDText()+" "
-//	+a.getTable()+foreigntable+"[shape=diamond,label=\"\"];"
-//				+a.getTable()+"->"+a.getTable()+foreigntable+"->"+foreigntable+"[arrowhead=none];";
-		String[] erd = a.getERDText().split(";");
-		return erd[0]+";"+erd[1]+"[label=\""+a.getName()+"_MUL\"];";
+		return a.getERDText()+" "
+	+a.getTable()+foreigntable+"[shape=diamond,label=\"\"];"
+				+a.getTable()+"->"+a.getTable()+foreigntable+"[arrowhead=none label=\"n\"];"+a.getTable()+foreigntable+"->"+foreigntable+"[arrowhead=none label=\"1\"];";
+//		String[] erd = a.getERDText().split(";");
+//		return a.getERDText();
 	}
 
 

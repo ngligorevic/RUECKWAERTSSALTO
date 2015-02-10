@@ -22,7 +22,7 @@ public class PrimaryKey extends Decorator{
 	@Override
 	public String getERDText() {
 		String[] erd = a.getERDText().split(";");
-		return erd[0]+";"+erd[1]+"[color=red];";
+		return erd[0]+";"+erd[1]+"[color=red label=<<u>"+a.getName()+"</u>>];";
 	}
 	
 	

@@ -6,6 +6,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -22,6 +23,8 @@ public class Connection {
 	private String database;
 	private java.sql.Connection con;
 	private MysqlDataSource ds;
+	private ArrayList<Tabelle> tabellen = new ArrayList<Tabelle>();
+	private HashMap<String,Integer> relationships = new HashMap<String, Integer>(); 
 
 	/**
 	 * 
@@ -43,6 +46,7 @@ public class Connection {
 		this.database = database;
 		try {
 			this.con = ds.getConnection();
+			this.updateTables();
 		} catch (SQLException e) {
 			System.err.println("Failed to connect to "+hostname);
 		}
@@ -57,6 +61,9 @@ public class Connection {
 			System.err.println("Failed to close connection to "+ds.getServerName());
 		}
 	}
+	public ArrayList<Tabelle> getTables(){
+		return this.tabellen;
+	}
 	/**
 	 * 
 	 * @param database die Datenbank
@@ -64,19 +71,20 @@ public class Connection {
 	 * 
 	 * Tabellen werden in ArrayList ausgelesen und gespeichert 
 	 */
-	public ArrayList<Tabelle> getTables(){
+	public ArrayList<Tabelle> updateTables(){
 		Statement st;
-		ArrayList<Tabelle> tables = new ArrayList<Tabelle>();
+		tabellen = new ArrayList<Tabelle>();
 		try {
 			st = con.createStatement();
 			ResultSet rs = st.executeQuery("show tables;");
 			while(rs.next()){
-				tables.add(new Tabelle(rs.getString(1)));
+				tabellen.add(new Tabelle(rs.getString(1)));
 			}
 		} catch (SQLException e) {
 			System.err.println("Failed to send command. Is "+database+" really a database?");
 		}
-		return tables;
+		getInfo();
+		return tabellen;
 	}
 
 	/**
@@ -84,40 +92,46 @@ public class Connection {
 	 * 
 	 * Informationen wie Attribute und Keys werden zu den Tabellen gespeichert
 	 */
-	public void getInfo(Tabelle t){
+	private void getInfo(){
+		for(int i = 0; i < tabellen.size(); i++){
+			Statement st;
+			try{
+				st = con.createStatement();
+				ResultSet rs = st.executeQuery("desc "+tabellen.get(i).getName()+";" );
+				DatabaseMetaData meta = con.getMetaData();
+				ResultSet rsK = meta.getImportedKeys(database, null, tabellen.get(i).getName());
+				Attribut a = null;
+				Attribut b = null;
+				while(rs.next()){
+					if(rs.getString("Key").equals("")){
+						if(rs.getString("Null").equals("No"))
+							tabellen.get(i).addAttribut(new CommonAttribut(rs.getString(1), tabellen.get(i).getName(), true));
+						else
+							tabellen.get(i).addAttribut(new CommonAttribut(rs.getString(1), tabellen.get(i).getName(), false));
+					}else if(rs.getString("Key").equals("PRI"))
+						if(rs.getString("Null").equals("No"))
+							tabellen.get(i).addAttribut(new PrimaryKey(new CommonAttribut(rs.getString(1), tabellen.get(i).getName(),  true)));
+						else
+							tabellen.get(i).addAttribut(new PrimaryKey(new CommonAttribut(rs.getString(1), tabellen.get(i).getName(),  false)));
 
-		Statement st;
-		try{
-			st = con.createStatement();
-			ResultSet rs = st.executeQuery("desc "+t.getName()+";" );
-			DatabaseMetaData meta = con.getMetaData();
-			ResultSet rsK = meta.getImportedKeys(database, null, t.getName());
-			Attribut a = null;
-			Attribut b = null;
-			while(rs.next()){
-				if(rs.getString("Key").equals(""))
-					t.addAttribut(new CommonAttribut(rs.getString(1), t.getName()));
-				else if(rs.getString("Key").equals("PRI"))
-					t.addAttribut(new PrimaryKey(new CommonAttribut(rs.getString(1), t.getName())));
-				
-				
-			}
-			while(rsK.next()){
-	
-				a = t.getAttributWithName(rsK.getString(8));
-				if( a != null)
-					t.setAttributWidthName(new ForeignKey(a, rsK.getString(3), rsK.getString(4)));
-				else
-					t.addAttribut(new ForeignKey(new CommonAttribut(rsK.getString(8), t.getName()),  rsK.getString(3), rsK.getString(4)));
-			}
 
-		}catch (SQLException e){
-			System.err.println("Failed to send command. Is "+database+" really a database?");
-			e.printStackTrace();
+				}
+				while(rsK.next()){
+					a = tabellen.get(i).getAttributWithName(rsK.getString(8));
+					if( a != null)
+						tabellen.get(i).setAttributWidthName(new ForeignKey(a, rsK.getString(3), rsK.getString(4)));
+					else
+						//					if(rs.getString("Null").equals("No"))
+						tabellen.get(i).addAttribut(new ForeignKey(new CommonAttribut(rsK.getString(8), tabellen.get(i).getName(),true),  rsK.getString(3), rsK.getString(4)));
+					//					else
+					//						t.addAttribut(new ForeignKey(new CommonAttribut(rsK.getString(8), t.getName(),false),  rsK.getString(3), rsK.getString(4)));	
+				}
+
+			}catch (SQLException e){
+				System.err.println("Failed to send command. Is "+database+" really a database?");
+				e.printStackTrace();
+			}
 		}
-	}
-	public void setDatabase(String database){
-		this.database = database;
 	}
 
 

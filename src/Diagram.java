@@ -17,13 +17,12 @@ public class Diagram{
 		File file;
 		FileWriter rf;
 		BufferedWriter bf;
-		ArrayList<Tabelle> tabellen = con.getTables();
+		ArrayList<Tabelle> tabellen = con.updateTables();
 		try{
 			file = new File(filename);
 			rf = new FileWriter(file);
 			bf = new BufferedWriter(rf); 
 			for(int i = 0; i < tabellen.size(); i++){
-				con.getInfo(tabellen.get(i));
 				bf.write(tabellen.get(i).getRM());
 				bf.newLine();//Zeilenumbruch
 			}
@@ -47,34 +46,18 @@ public class Diagram{
 			file = new File(filename);
 			rf = new FileWriter(file);
 			bf = new BufferedWriter(rf); 
-			String ftable = "";
 			ArrayList<Attribut> atr;
-			ArrayList<String> pk;
-			ArrayList<ForeignKey> fk;
-			ArrayList<Tabelle> tabellen = con.getTables();
+			ArrayList<Tabelle> tabellen = con.updateTables();
 			bf.write("digraph "+database+" {");
 			bf.newLine();
 			for(int i = 0; i < tabellen.size(); i++){
 				bf.write(tabellen.get(i).getName()+"[shape=box];");
 				bf.newLine();
-				con.getInfo(tabellen.get(i));
 				atr = tabellen.get(i).getAttributs();
 		
 				for(int j = 0; j < atr.size(); j++){
 					bf.write(atr.get(j).getERDText());
 					bf.newLine();
-//					bf.write(tabellen.get(i).getName()+atr.get(j).getName()+"[shape=ellipse,style=filled,");
-//					//bf.write("<FK>"+table+".");
-//					
-//					//bf.write( atr.get(j));
-//				}
-//				//bf.write(")");
-//				//bf.write("];");
-//				bf.newLine();//Zeilenumbruch
-//				if(ftable.equals("")==false){
-//				bf.write(ftable+";");
-//				bf.newLine();
-//				ftable = "";
 				}
 			}
 			bf.write("}");

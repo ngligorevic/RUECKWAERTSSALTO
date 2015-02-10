@@ -1,12 +1,14 @@
 package rueckwaertssalto;
 
 public class CommonAttribut implements Attribut{
-	String name;
-	String table;
+	private String name;
+	private String table;
+	private boolean notNull;
 	
-	public CommonAttribut(String name, String table){
+	public CommonAttribut(String name, String table, boolean notNull){
 		this.name = name;
 		this.table = table;
+		this.notNull = notNull;
 	}
 
 	@Override
