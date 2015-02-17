@@ -24,7 +24,7 @@ public class Connection {
 	private java.sql.Connection con;
 	private MysqlDataSource ds;
 	private ArrayList<Tabelle> tabellen = new ArrayList<Tabelle>();
-	private HashMap<String,Integer> relationships = new HashMap<String, Integer>(); 
+	private HashMap<String,Relationship> relationships = new HashMap<String,Relationship>(); 
 
 	/**
 	 * 
@@ -49,6 +49,7 @@ public class Connection {
 			this.updateTables();
 		} catch (SQLException e) {
 			System.err.println("Failed to connect to "+hostname);
+			System.exit(1);
 		}
 	}
 	/**
@@ -63,6 +64,9 @@ public class Connection {
 	}
 	public ArrayList<Tabelle> getTables(){
 		return this.tabellen;
+	}
+	public HashMap<String, Relationship> getRelationship(){
+		return this.relationships;
 	}
 	/**
 	 * 
@@ -83,6 +87,7 @@ public class Connection {
 		} catch (SQLException e) {
 			System.err.println("Failed to send command. Is "+database+" really a database?");
 		}
+		
 		getInfo();
 		return tabellen;
 	}
@@ -125,6 +130,9 @@ public class Connection {
 						tabellen.get(i).addAttribut(new ForeignKey(new CommonAttribut(rsK.getString(8), tabellen.get(i).getName(),true),  rsK.getString(3), rsK.getString(4)));
 					//					else
 					//						t.addAttribut(new ForeignKey(new CommonAttribut(rsK.getString(8), t.getName(),false),  rsK.getString(3), rsK.getString(4)));	
+					
+						relationships.put(tabellen.get(i).getName()+rsK.getString(3),new Relationship(tabellen.get(i).getName(),rsK.getString(3)));
+						
 				}
 
 			}catch (SQLException e){
@@ -132,6 +140,21 @@ public class Connection {
 				e.printStackTrace();
 			}
 		}
+
+	}
+	public boolean hasRelationship(String tabelle1, String tabelle2){
+		for(int i = 0; i < this.relationships.size(); i++){
+			if(relationships.get(i).getNameTabelle1().equals(tabelle1)){
+				if(relationships.get(i).getNameTabelle2().equals(tabelle2)){
+					return true;
+				}
+			}else if(relationships.get(i).getNameTabelle1().equals(tabelle2)){
+				if(relationships.get(i).getNameTabelle2().equals(tabelle1)){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 

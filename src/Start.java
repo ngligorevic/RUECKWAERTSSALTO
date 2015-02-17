@@ -55,8 +55,9 @@ public class Start {
 			}
 		}else{
 			if(d.getDotFile(con, arguments.get("d").toString(),"testinsy.dot")==true){
-				System.out.println("ERD saved in "+arguments.get("o").toString());
 				d.Drawpng("testinsy.dot", "testinsy.png");
+				System.out.println("ERD saved in "+arguments.get("o").toString());
+				
 			}
 //				System.out.println("Dotfile saved in ERD.dot");
 //				if(d.Drawpng("ERD.dot", arguments.get("o").toString())){

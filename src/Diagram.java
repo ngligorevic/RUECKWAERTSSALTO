@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 /**
  * @author Melanie Goebel
  * @version 20140120
@@ -39,6 +40,7 @@ public class Diagram{
 	}
 	
 	public boolean getDotFile(Connection con, String database, String filename){
+		HashMap<String,Relationship> relationships = con.getRelationship();
 		File file;
 		FileWriter rf;
 		BufferedWriter bf;
@@ -59,6 +61,10 @@ public class Diagram{
 					bf.write(atr.get(j).getERDText());
 					bf.newLine();
 				}
+			}
+			for(String key: relationships.keySet()){
+				bf.write(relationships.get(key).getERDText());
+				bf.newLine();
 			}
 			bf.write("}");
 			bf.close();rf.close();//Schlieﬂen damit man es nochmal verwenden kann.
