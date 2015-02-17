@@ -15,7 +15,7 @@ public class ForeignKey extends Decorator{
 	}
 	@Override
 	public String getRMText() {
-		return foreigntable+"."+nameForeignTable+":"+a.getRMText();
+		return nameForeignTable+"."+foreigntable+":"+a.getRMText();
 	}
 	  
 

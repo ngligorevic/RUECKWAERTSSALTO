@@ -21,7 +21,7 @@ public class Relationship {
 		return tabelle2;
 	}
 	public String getERDText(){
-		return tabelle1+tabelle2+"[shape=diamond,label=\"\"];"+
+		return tabelle1+tabelle2+"[shape=diamond,label=\""+tabelle1+"_"+tabelle2+"\"];"+
 				tabelle1+"->"+tabelle1+tabelle2+"[arrowhead=none, label=\"1\"];"+
 				tabelle1+tabelle2+"->"+tabelle2+"[arrowhead=none, label=\"n\"];";
 	}
